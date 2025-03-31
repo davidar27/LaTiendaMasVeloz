@@ -393,3 +393,62 @@ EXEC sp_ActualizarProducto
     @precio = 250.99,
     @stock = 15,
     @proveedor = 'BikeWorld';
+
+
+
+ALTER PROCEDURE sp_ActualizarProducto
+    @id_producto INT,
+    @nombre NVARCHAR(100),
+    @categoria NVARCHAR(100),
+    @descripcion NVARCHAR(255) = NULL,
+    @precio DECIMAL(10,2),
+    @stock INT,
+    @proveedor NVARCHAR(100) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DECLARE @id_categoria INT, @id_proveedor INT;
+    
+    -- Validar categoría
+    SELECT @id_categoria = id_categoria FROM Categorias WHERE nombre = @categoria;
+    IF @id_categoria IS NULL
+    BEGIN
+        RAISERROR('La categoría especificada no existe', 16, 1);
+        RETURN;
+    END
+    
+    -- Validar proveedor (si se proporcionó)
+    IF @proveedor IS NOT NULL
+    BEGIN
+        SELECT @id_proveedor = id_proveedor FROM Proveedores WHERE nombre = @proveedor;
+        IF @id_proveedor IS NULL
+        BEGIN
+            RAISERROR('El proveedor especificado no existe', 16, 1);
+            RETURN;
+        END
+    END
+    
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        UPDATE Productos
+        SET 
+            nombre = @nombre,
+            id_categoria = @id_categoria,
+            descripcion = @descripcion,
+            precio_venta = @precio,
+            stock = @stock,
+            id_proveedor = @id_proveedor
+        WHERE id_producto = @id_producto;
+        
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+            
+        THROW;
+    END CATCH
+END
+GO
