@@ -127,7 +127,7 @@ namespace Modelo
                 }
             }
         }
-        public (bool Success, string Message) EliminarProductoM(string nombre)
+        public void EliminarProductoM(string nombre)
         {
             using (SqlConnection connection = ConexionBD.ObtenerConexion())
             {
@@ -141,23 +141,19 @@ namespace Modelo
                     {
                         cmd.Parameters.AddWithValue("@nombre", nombre);
                         int rowsAffected = cmd.ExecuteNonQuery();
-
-                        return rowsAffected > 0
-                            ? (true, "Producto eliminado correctamente")
-                            : (false, "No se encontró el producto a eliminar");
                     }
                 }
                 catch (SqlException ex) when (ex.Number == 547)
                 {
-                    return (false, "No se puede eliminar: El producto tiene registros relacionados");
+                    throw new Exception("No se puede eliminar el producto porque está relacionado con otras tablas.", ex);
                 }
                 catch (SqlException ex)
                 {
-                    return (false, $"Error SQL al eliminar: {ex.Message}");
+                    throw new Exception("Error SQL al eliminar producto: " + ex.Message, ex);
                 }
                 catch (Exception ex)
                 {
-                    return (false, $"Error inesperado al eliminar: {ex.Message}");
+                    throw new Exception("Error inesperado al eliminar producto: " + ex.Message, ex);
                 }
             }
         }

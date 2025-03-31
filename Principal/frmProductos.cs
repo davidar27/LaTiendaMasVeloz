@@ -244,7 +244,7 @@ namespace Principal
         {
             if (rowIndex < 0) return;
 
-            string? nombre = dgvProductos.Rows[rowIndex].Cells[0].Value?.ToString();
+            string? nombre = dgvProductos.Rows[rowIndex].Cells[1].Value?.ToString();
 
             if (string.IsNullOrEmpty(nombre))
             {

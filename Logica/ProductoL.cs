@@ -76,12 +76,7 @@ namespace Logica
         {
             try
             {
-                var resultado = productoM.EliminarProductoM(nombre);
-
-                if (!resultado.Success)
-                {
-                    throw new Exception(resultado.Message);
-                }
+                productoM.EliminarProductoM(nombre);
             }
             catch (Exception ex)
             {
