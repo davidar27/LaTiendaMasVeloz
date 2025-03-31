@@ -19,19 +19,19 @@ namespace Logica
             return table;
         }
 
-        public void InsertarProducto(string nombre, string descripcion, decimal precio, int stock)
-        {
-            productoData.InsertarProducto(nombre, descripcion, precio, stock);
-        }
+        //public void InsertarProducto(string nombre, string descripcion, decimal precio, int stock)
+        //{
+        //    productoData.InsertarProducto(nombre, descripcion, precio, stock);
+        //}
 
-        public void EditarProducto(int id, string nombre, string descripcion, decimal precio, int stock)
-        {
-            productoData.EditarProducto(id, nombre, descripcion, precio, stock);
-        }
+        //public void EditarProducto(int id, string nombre, string descripcion, decimal precio, int stock)
+        //{
+        //    productoData.EditarProducto(id, nombre, descripcion, precio, stock);
+        //}
 
-        public void EliminarProducto(int id)
-        {
-            productoData.EliminarProducto(id);
-        }
+        //public void EliminarProducto(int id)
+        //{
+        //    productoData.EliminarProducto(id);
+        //}
     }
 }

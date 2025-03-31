@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Modelo
+namespace Logica
 {
-    public class VentaData
+    public class UsuarioL
     {
 
-  
     }
 }
