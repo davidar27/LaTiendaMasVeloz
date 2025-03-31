@@ -16,19 +16,24 @@ namespace Principal
     public partial class frmProductos : Form
     {
         private ProductoL productoL = new ProductoL();
+        private UsuarioL usuarioL = new UsuarioL();
         private bool modoEdicion = false;
         private DataGridViewRow filaEditable = null;
         private DataTable tablaOriginal;
+        private string datos = null;
+        public BindingSource bindingSource = null;
 
 
         public frmProductos()
         {
             InitializeComponent();
+            bindingSource = new BindingSource();
+
         }
 
         private void frmProductos_Load(object sender, EventArgs e)
         {
-            CargarProductos();
+        
 
         }
 
@@ -36,10 +41,36 @@ namespace Principal
         {
             try
             {
-                DataTable products = productoL.ObtenerProductosL();
-                tablaOriginal = products.Copy();
-                bindingSource1.DataSource = products;
-                dgvProductos.DataSource = bindingSource1;
+                if (datos == "productos")
+                {
+                    DataTable products = productoL.ObtenerProductosL();
+                    tablaOriginal = products.Copy();
+                    bindingSource.DataSource = products;
+                    dgvProductos.DataSource = bindingSource;
+                    dgvProductos.Columns["ID"].DisplayIndex = 0;
+                    dgvProductos.Columns["Nombre"].DisplayIndex = 1;
+                    dgvProductos.Columns["Categoria"].DisplayIndex = 2;
+                    dgvProductos.Columns["Descripcion"].DisplayIndex = 3;
+                    dgvProductos.Columns["Precio"].DisplayIndex = 4;
+                    dgvProductos.Columns["Stock"].DisplayIndex = 5;
+                    dgvProductos.Columns["Proveedor"].DisplayIndex = 6;
+                    dgvProductos.Columns["btnEditar"].DisplayIndex = 7;
+                    dgvProductos.Columns["btnEliminar"].DisplayIndex = 8;
+                }
+                else if (datos == "usuarios")
+                {
+                    DataTable usuarios = usuarioL.ObtenerUsuariosL();
+                    tablaOriginal = usuarios.Copy();
+                    bindingSource.DataSource = usuarios;
+                    dgvProductos.DataSource = bindingSource;
+                    dgvProductos.Columns["ID"].DisplayIndex = 0;
+                    dgvProductos.Columns["Correo"].DisplayIndex = 1;
+                    dgvProductos.Columns["Nombre"].DisplayIndex = 2;
+                    dgvProductos.Columns["Apellido"].DisplayIndex = 3;
+                    dgvProductos.Columns["Rol"].DisplayIndex = 4;
+                    dgvProductos.Columns["btnEditar"].DisplayIndex = 5;
+                    dgvProductos.Columns["btnEliminar"].DisplayIndex = 6;
+                }
 
                 foreach (DataGridViewColumn col in dgvProductos.Columns)
                 {
@@ -47,6 +78,7 @@ namespace Principal
                                    col.Name == "btnEditar" ||
                                    col.Name == "btnEliminar";
                 }
+                dgvProductos.Refresh();
             }
             catch (Exception ex)
             {
@@ -58,7 +90,7 @@ namespace Principal
         {
             try
             {
-                if (!modoEdicion)
+                if (datos == "productos" && !modoEdicion)
                 {
                     AgregarNuevoProducto();
                 }
@@ -66,7 +98,8 @@ namespace Principal
                 {
                     GuardarProducto();
                 }
-            }
+                }
+            
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -80,7 +113,7 @@ namespace Principal
             btnGuardar.Visible = true;
             btnCancelar.Visible = true;
 
-            DataTable table = (DataTable)bindingSource1.DataSource;
+            DataTable table = (DataTable)bindingSource.DataSource;
             DataRow newRow = table.NewRow();
 
             newRow["Nombre"] = string.Empty;
@@ -91,7 +124,32 @@ namespace Principal
             newRow["Proveedor"] = string.Empty;
 
             table.Rows.InsertAt(newRow, 0);
-            bindingSource1.Position = 0;
+            bindingSource.Position = 0;
+
+            modoEdicion = true;
+            dgvProductos.ReadOnly = false;
+
+            HabilitarEdicionFila(0);
+            EnfocarPrimeraCeldaEditable();
+        }
+        private void AgregarNuevoUsuario()
+        {
+
+            btnGuardar.Location = btnAgregar.Location;
+            btnGuardar.Visible = true;
+            btnCancelar.Visible = true;
+
+            DataTable table = (DataTable)bindingSource.DataSource;
+            DataRow newRow = table.NewRow();
+
+            newRow["Nombre"] = string.Empty;
+            newRow["Apelldio"] = string.Empty;
+            newRow["Correo"] = string.Empty;
+            newRow["Contraseña"] = string.Empty;
+            newRow["Rol"] = string.Empty;
+
+            table.Rows.InsertAt(newRow, 0);
+            bindingSource.Position = 0;
 
             modoEdicion = true;
             dgvProductos.ReadOnly = false;
@@ -104,13 +162,13 @@ namespace Principal
         {
             if (!ValidarDatos()) return;
 
-            if (bindingSource1.Current == null)
+            if (bindingSource.Current == null)
             {
                 MessageBox.Show("No hay un producto seleccionado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DataRowView currentRow = (DataRowView)bindingSource1.Current;
+            DataRowView currentRow = (DataRowView)bindingSource.Current;
 
             try
             {
@@ -151,7 +209,7 @@ namespace Principal
 
         private bool ValidarDatos()
         {
-            DataRowView currentRow = (DataRowView)bindingSource1.Current;
+            DataRowView currentRow = (DataRowView)bindingSource.Current;
 
             if (string.IsNullOrWhiteSpace(currentRow["Nombre"].ToString()))
             {
@@ -244,13 +302,7 @@ namespace Principal
         {
             if (rowIndex < 0) return;
 
-            string? nombre = dgvProductos.Rows[rowIndex].Cells[1].Value?.ToString();
-
-            if (string.IsNullOrEmpty(nombre))
-            {
-                MessageBox.Show("No se pudo obtener el nombre del producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            string? nombre = dgvProductos.Rows[rowIndex].Cells["Nombre"].Value?.ToString();
 
             var confirmResult = MessageBox.Show($"¿Estás seguro de que deseas eliminar el producto '{nombre}'?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -277,9 +329,9 @@ namespace Principal
                 MessageBox.Show("Ya hay una fila en modo edición. Guarda los cambios antes de editar otra fila.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
-                
-            
+
+
+
             if (dgvProductos.CurrentRow != null)
             {
                 filaEditable = dgvProductos.CurrentRow;
@@ -305,7 +357,7 @@ namespace Principal
                     {
                         EditarProducto(e.RowIndex);
                     }
-                   
+
                 }
                 else if (nombreBoton == "btnEliminar")
                 {
@@ -314,14 +366,14 @@ namespace Principal
             }
         }
 
-     
+
 
         private void Cancelar()
         {
             if (!modoEdicion || filaEditable == null)
                 return;
 
-            DataTable table = (DataTable)bindingSource1.DataSource;
+            DataTable table = (DataTable)bindingSource.DataSource;
             table.RejectChanges();
 
             foreach (DataGridViewCell cell in filaEditable.Cells)
@@ -351,5 +403,25 @@ namespace Principal
             GuardarProducto();
 
         }
+
+        private void linkLabelUsuarios_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            datos = "usuarios";
+            CargarProductos();
+        }
+
+        private void linkLabelProducto_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            datos = "productos";
+            CargarProductos();
+
+        }
+
+        private void linkLabelFacturas_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+      
     }
 }

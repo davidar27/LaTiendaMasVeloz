@@ -28,12 +28,58 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "frmPrincipal";
+            btnAdmin = new Button();
+            btnEmpleado = new Button();
+            btnCliente = new Button();
+            SuspendLayout();
+            // 
+            // btnAdmin
+            // 
+            btnAdmin.Location = new Point(235, 117);
+            btnAdmin.Name = "btnAdmin";
+            btnAdmin.Size = new Size(75, 23);
+            btnAdmin.TabIndex = 0;
+            btnAdmin.Text = "Admin";
+            btnAdmin.UseVisualStyleBackColor = true;
+            btnAdmin.Click += btnAdmin_Click;
+            // 
+            // btnEmpleado
+            // 
+            btnEmpleado.Location = new Point(349, 117);
+            btnEmpleado.Name = "btnEmpleado";
+            btnEmpleado.Size = new Size(75, 23);
+            btnEmpleado.TabIndex = 1;
+            btnEmpleado.Text = "Empleado";
+            btnEmpleado.UseVisualStyleBackColor = true;
+            btnEmpleado.Click += btnEmpleado_Click;
+            // 
+            // btnCliente
+            // 
+            btnCliente.Location = new Point(474, 117);
+            btnCliente.Name = "btnCliente";
+            btnCliente.Size = new Size(75, 23);
+            btnCliente.TabIndex = 2;
+            btnCliente.Text = "Cliente";
+            btnCliente.UseVisualStyleBackColor = true;
+            btnCliente.Click += btnCliente_Click;
+            // 
+            // frmPrincipal
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(btnCliente);
+            Controls.Add(btnEmpleado);
+            Controls.Add(btnAdmin);
+            Name = "frmPrincipal";
+            Text = "frmPrincipal";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private Button btnAdmin;
+        private Button btnEmpleado;
+        private Button btnCliente;
     }
 }
