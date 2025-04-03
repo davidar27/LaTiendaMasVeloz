@@ -1,61 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Logica;
-using static System.Collections.Specialized.BitVector32;
+﻿using Logica;
 
 namespace Principal
 {
-    public partial class frmLogin: Form
+    public partial class frmLogin : Form
     {
-        private UsuarioL usuarioBL = new UsuarioL();
+        private UsuarioL usuarioL = new UsuarioL();
 
         public frmLogin()
         {
             InitializeComponent();
         }
 
-        //private void btnLogin_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        string usuario = txtUsuario.Text;
-        //        string contraseña = txtContraseña.Text;
+        private void btnEntrar_Click(object sender, EventArgs e)
+        {
 
-        //        Usuario user = usuarioBL.ValidarUsuario(usuario, contraseña);
+            if (txtUsuario.Text != "" || txtContraseña.Text != "")
+            {
+                var validar = usuarioL.ValidarUsuarioL(txtUsuario.Text, txtContraseña.Text);
+                if (validar)
+                {
+                    frmProductos frm = new frmProductos();
+                    this.Hide();
+                    frm.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    lbError.Text = "Usuario o contraseña Incorrecta";
+                    lbError.Visible = true;
+                }
 
-        //        if (user != null)
-        //        {
-        //            // Guardar usuario en sesión
-        //            Sesion.UsuarioActual = user;
+            }
+            else
+            {
+                lbError.Text = "Usuario o contraseña faltantes";
+                lbError.Visible = true;
+            }
+        }
 
-        //            // Mostrar formulario principal
-        //            frmPrincipal principal = new frmPrincipal();
-        //            principal.Show();
-        //            this.Hide();
-        //        }
-        //        else
-        //        {
-        //            MessageBox.Show("Usuario o contraseña incorrectos", "Error",
-        //                          MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error al iniciar sesión: " + ex.Message, "Error",
-        //                      MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
+        private void txbContraseña_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
     }
 }
-// Clase para manejar sesión
-//public static class Sesion
-//{
-//    public static Usuario UsuarioActual { get; set; }
-//}

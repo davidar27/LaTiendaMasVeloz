@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Modelo;
 using Modelo.Entities;
 
@@ -11,38 +6,51 @@ namespace Logica
 {
     public class UsuarioL
     {
-        private UsuarioM usuarioM = new UsuarioM();
+        UsuarioM usuarioM = new UsuarioM();
 
         public DataTable ObtenerUsuariosL()
         {
-            try
-            {
-                DataTable usuarios = usuarioM.ObtenerUsuariosM();
+            DataTable usuarios = usuarioM.ObtenerUsuariosM();
+            return usuarios;
 
-                return usuarios;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al obtener usuarios: " + ex.Message);
-            }
         }
 
-        public void AgregarUsuarioL(string nombre, string apellido, string correo, string contraseña,  string rol)
+        public void AgregarUsuarioL(string nombre, string apellido, string correo, string contraseña, string rol)
         {
-            try
-            {
-                Usuario usuario = new Usuario();
-                usuario.Nombre = nombre;
-                usuario.Apellido = apellido;
-                usuario.Correo = contraseña;
-                usuario.Contraseña = contraseña;
-                usuario.Rol = rol;
-                usuarioM.AgregarProductosM(usuario);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al agregar producto: " + ex.Message);
-            }
+            Usuario usuario = new Usuario();
+            usuario.Nombre = nombre;
+            usuario.Apellido = apellido;
+            usuario.Correo = contraseña;
+            usuario.Contraseña = contraseña;
+            usuario.Rol = rol;
+            usuarioM.AgregarUsuarioM(usuario);
+        }
+
+        public void EditarUsuarioL(int id, string nombre, string apellido, string correo, string contraseña, string rol)
+        {
+            Usuario usuario = new Usuario();
+            usuario.Id = id;
+            usuario.Nombre = nombre;
+            usuario.Apellido = apellido;
+            usuario.Correo = contraseña;
+            usuario.Contraseña = contraseña;
+            usuario.Rol = rol;
+            usuarioM.EditarUsuarioM(usuario);
+        }
+
+
+        public void EliminarUsuarioL(string correo)
+        {
+            Usuario usuario = new Usuario();
+            usuario.Correo = correo;
+            usuarioM.EliminarUsuarioM(correo);
+        }
+
+
+        public bool ValidarUsuarioL(string correo, string contraseña)
+        {
+            return usuarioM.ValidarUsuarioM(correo, contraseña);
+
         }
     }
 }

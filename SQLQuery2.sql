@@ -9,15 +9,16 @@ GO
 
 
 -- Crear la tabla de Usuarios
-CREATE TABLE Usuarios (
-    id_usuario INT IDENTITY(1,1) PRIMARY KEY,
-	correo VARCHAR(255) NOT NULL UNIQUE(correo),
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100),
-    contraseña VARCHAR(255) NOT NULL,
-    rol VARCHAR(30) CHECK (rol IN ('Administrador', 'Empleado', 'Cliente')) NOT NULL
-);
+CREATE TABLE Usuarios(
+	id_usuario INT IDENTITY(1,1) NOT NULL PRIMARY KEY CLUSTERED,
+	nombre VARCHAR(100) NOT NULL,
+	apellido VARCHAR(100) NULL,
+	correo VARCHAR(255) NOT NULL UNIQUE,
+	contraseña VARCHAR(255) NOT NULL,
+	rol VARCHAR(30) NOT NULL CHECK ([rol] IN ('Cliente', 'Empleado', 'Administrador'))
+)
 GO
+
 
 -- Crear la tabla de Categorías
 CREATE TABLE Categorias (
@@ -127,6 +128,7 @@ ALTER TABLE Productos CHECK CONSTRAINT ALL;
 */
 
 GO
+
 CREATE PROCEDURE sp_ObtenerProductos
 AS
 BEGIN
@@ -144,6 +146,7 @@ BEGIN
     INNER JOIN Proveedores pr ON p.id_proveedor = pr.id_proveedor;
 END;
 GO
+
 --
 CREATE PROCEDURE sp_ObtenerUsuarios
 AS
@@ -152,40 +155,15 @@ BEGIN
 		u.id_usuario AS ID,
         u.nombre AS Nombre,
 		u.apellido AS Apellido,
+		u.contraseña AS Contraseña,
 		u.correo AS Correo,
 		u.rol AS Rol
     FROM Usuarios u
 END;
 GO
-EXEC sp_ObtenerUsuarios;
-GO
-CREATE PROCEDURE sp_AgregarUsuario
-    @nombre NVARCHAR(50),
-    @apellido NVARCHAR(50),
-    @correo NVARCHAR(100),
-    @contraseña NVARCHAR(255),
-    @rol NVARCHAR(50)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Usuarios (nombre, apellido, correo, contraseña, rol)
-    VALUES (@nombre, @apellido, @correo, @contraseña, @rol);
-
-    PRINT 'Usuario agregado correctamente';
-END;
-
 
 
 --
-
--- EXEC sp_ObtenerProductos;
-
-GO
-
-
-
--- sp_AgregarProducto --
 CREATE PROCEDURE sp_AgregarProducto
     @nombre NVARCHAR(100),
     @categoria NVARCHAR(100),
@@ -219,16 +197,32 @@ BEGIN
     -- Insertar el producto
     INSERT INTO Productos (nombre, id_categoria, descripcion, precio_venta, stock, id_proveedor)
     VALUES (@nombre, @id_categoria, @descripcion, @precio, @stock, @id_proveedor);
+
+    PRINT 'Producto agregado correctamente.';
 END;
 GO
 
+CREATE PROCEDURE sp_AgregarUsuario
+    @nombre NVARCHAR(50),
+    @apellido NVARCHAR(50),
+    @correo NVARCHAR(100),
+    @contraseña NVARCHAR(255),
+    @rol NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    INSERT INTO Usuarios (nombre, apellido, correo, contraseña, rol)
+    VALUES (@nombre, @apellido, @correo, @contraseña, @rol);
 
+    PRINT 'Usuario agregado correctamente';
+END;
+GO
 
+--
 
-----
-CREATE PROCEDURE sp_ActualizarProducto
-    @id_producto INT,
+ CREATE PROCEDURE sp_ActualizarProducto
+    @id_producto INT,  -- Agregar este parámetro
     @nombre NVARCHAR(100),
     @categoria NVARCHAR(100),
     @descripcion NVARCHAR(255),
@@ -274,9 +268,32 @@ BEGIN
         precio_venta = @precio,
         stock = @stock,
         id_proveedor = @id_proveedor
-    WHERE id_producto = @id_producto;
+    WHERE id_producto = @id_producto;  -- Usar ID en lugar de nombre
 
     PRINT 'Producto actualizado correctamente.';
 END;
 GO
 
+CREATE PROCEDURE sp_ActualizarUsuario
+    @id_usuario INT,
+    @nombre NVARCHAR(50),
+    @apellido NVARCHAR(50),
+    @correo NVARCHAR(100),
+    @contraseña NVARCHAR(255),
+    @rol NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Usuarios
+    SET 
+        nombre = @nombre,
+        apellido = @apellido,
+        correo = @correo,
+        contraseña = @contraseña,
+        rol = @rol
+    WHERE id_usuario = @id_usuario;
+
+    PRINT 'Usuario actualizado correctamente';
+END;
+GO

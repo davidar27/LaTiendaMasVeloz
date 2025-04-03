@@ -18,7 +18,10 @@ namespace Principal
         }
         private void btnAdmin_Click(object sender, EventArgs e)
         {
-            
+            frmLogin frm = new frmLogin();
+            this.Hide();
+            frm.ShowDialog();
+            this.Show();
         }
 
         private void btnEmpleado_Click(object sender, EventArgs e)

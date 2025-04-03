@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Modelo.Entities
 {
-    public class Usuario
+    public class Categoria
     {
         public int Id { get; set; }
-        public string Correo { get; set; }
         public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Contraseña { get; set; }
-        public string Rol { get; set; }
+        
     }
 }

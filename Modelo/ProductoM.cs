@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,18 +16,16 @@ namespace Modelo
         public DataTable ObtenerProductosM()
         {
             DataTable productos = new DataTable();
+
             try
             {
                 using (SqlConnection connection = ConexionBD.ObtenerConexion())
+                using (SqlCommand command = new SqlCommand("sp_ObtenerProductos", connection))
+                using (SqlDataAdapter da = new SqlDataAdapter(command))
                 {
-                    string query = "sp_ObtenerProductos";
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        SqlDataAdapter da = new SqlDataAdapter(command);
-                        da.Fill(productos);
-                       
-                    }
+                    command.CommandType = CommandType.StoredProcedure;
+                    Debug.WriteLine(productos);
+                    da.Fill(productos);
                 }
             }
             catch (SqlException ex)
@@ -40,6 +39,7 @@ namespace Modelo
 
             return productos;
         }
+
         public void AgregarProductosM(Producto producto)
         {
             using (SqlConnection connection = ConexionBD.ObtenerConexion())
@@ -112,7 +112,7 @@ namespace Modelo
                         command.Parameters.AddWithValue("@proveedor", producto.Proveedor ?? (object)DBNull.Value);
 
                         command.ExecuteNonQuery();
-                        
+
 
 
                     }
@@ -158,7 +158,6 @@ namespace Modelo
             }
         }
 
-  
+
     }
 }
-

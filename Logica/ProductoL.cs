@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,75 +18,44 @@ namespace Logica
 
         public DataTable ObtenerProductosL()
         {
-            try
-            {
-                DataTable productos = productoM.ObtenerProductosM();
-
-                return productos;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al obtener productos: " + ex.Message);
-            }
+            DataTable productos = productoM.ObtenerProductosM();
+            return productos;
         }
+
         public void AgregarProductoL(string nombre, string categoria, string descripcion, decimal precio, int stock, string proveedor)
         {
-            try
+            Producto producto = new Producto
             {
-                Producto producto = new Producto();
-                producto.Nombre = nombre;
-                producto.Categoria = categoria;
-                producto.Descripcion = descripcion;
-                producto.Precio = precio;
-                producto.Stock = stock;
-                producto.Proveedor = proveedor;
-                productoM.AgregarProductosM(producto);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al agregar producto: " + ex.Message);
-            }
+                Nombre = nombre,
+                Categoria = categoria,
+                Descripcion = descripcion,
+                Precio = precio,
+                Stock = stock,
+                Proveedor = proveedor
+            };
+            productoM.AgregarProductosM(producto);
         }
 
-        public void EditarProductoL(int id, string nombre, string categoria, string descripcion, decimal precio,int stock, string proveedor)
+        public void EditarProductoL(int id, string nombre, string categoria, string descripcion, decimal precio, int stock, string proveedor)
         {
-            try
+            Producto producto = new Producto
             {
+                Id = id,
+                Nombre = nombre,
+                Categoria = categoria,
+                Descripcion = descripcion,
+                Precio = precio,
+                Stock = stock,
+                Proveedor = proveedor
+            };
 
-                var producto = new Producto
-                {
-                    Id = id,
-                    Nombre = nombre,
-                    Categoria = categoria,
-                    Descripcion = descripcion,
-                    Precio = precio,
-                    Stock = stock,
-                    Proveedor = proveedor
-                };
-
-               productoM.EditarProductoM(producto);
-
-               
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al editar producto: " + ex.Message);
-            }
+            productoM.EditarProductoM(producto);
         }
+
         public void EliminarProductoL(string nombre)
         {
-            try
-            {
-                productoM.EliminarProductoM(nombre);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al eliminar producto: " + ex.Message);
-            }
+            productoM.EliminarProductoM(nombre);
         }
-
-
     }
-
 
 }

@@ -15,5 +15,7 @@ namespace Modelo.Entities
         public decimal Precio { get; set; }
         public int Stock { get; set; }
         public string Proveedor { get; set; }
+
+        public string fecha { get; set; }
     }
 }
