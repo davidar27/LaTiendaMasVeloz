@@ -55,7 +55,6 @@ GO
 
 
 
-
 -- Crear la tabla Facturas
 CREATE TABLE Facturas (
     id_factura INT IDENTITY(1,1) PRIMARY KEY,
@@ -72,11 +71,8 @@ CREATE TABLE Facturas (
     FOREIGN KEY (id_cliente) REFERENCES Usuarios(id_usuario),
     FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor),
 	FOREIGN KEY (id_empleado) REFERENCES Usuarios(id_usuario)
-
 );
 GO
-
-
 
 
 -- Insertar Usuarios (Admins y Empleados para manejar productos)
@@ -297,3 +293,7 @@ BEGIN
     PRINT 'Usuario actualizado correctamente';
 END;
 GO
+
+
+
+SELECT * FROM Usuarios WHERE correo = 'admin123@gmail.com' AND contraseña = 'admin123' AND rol = 'Administrador'

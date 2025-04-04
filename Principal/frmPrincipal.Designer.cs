@@ -30,14 +30,13 @@
         {
             btnAdmin = new Button();
             btnEmpleado = new Button();
-            btnCliente = new Button();
             SuspendLayout();
             // 
             // btnAdmin
             // 
-            btnAdmin.Location = new Point(235, 117);
+            btnAdmin.Location = new Point(49, 30);
             btnAdmin.Name = "btnAdmin";
-            btnAdmin.Size = new Size(75, 23);
+            btnAdmin.Size = new Size(239, 57);
             btnAdmin.TabIndex = 0;
             btnAdmin.Text = "Admin";
             btnAdmin.UseVisualStyleBackColor = true;
@@ -45,34 +44,24 @@
             // 
             // btnEmpleado
             // 
-            btnEmpleado.Location = new Point(349, 117);
+            btnEmpleado.Location = new Point(49, 110);
             btnEmpleado.Name = "btnEmpleado";
-            btnEmpleado.Size = new Size(75, 23);
+            btnEmpleado.Size = new Size(239, 52);
             btnEmpleado.TabIndex = 1;
             btnEmpleado.Text = "Empleado";
             btnEmpleado.UseVisualStyleBackColor = true;
             btnEmpleado.Click += btnEmpleado_Click;
             // 
-            // btnCliente
-            // 
-            btnCliente.Location = new Point(474, 117);
-            btnCliente.Name = "btnCliente";
-            btnCliente.Size = new Size(75, 23);
-            btnCliente.TabIndex = 2;
-            btnCliente.Text = "Cliente";
-            btnCliente.UseVisualStyleBackColor = true;
-            btnCliente.Click += btnCliente_Click;
-            // 
             // frmPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(btnCliente);
+            ClientSize = new Size(340, 186);
             Controls.Add(btnEmpleado);
             Controls.Add(btnAdmin);
             Name = "frmPrincipal";
             Text = "frmPrincipal";
+            Load += frmPrincipal_Load;
             ResumeLayout(false);
         }
 
@@ -80,6 +69,5 @@
 
         private Button btnAdmin;
         private Button btnEmpleado;
-        private Button btnCliente;
     }
 }

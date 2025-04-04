@@ -6,7 +6,6 @@ namespace Modelo
 {
     public class UsuarioM
     {
-        private readonly ConexionBD connection = new ConexionBD();
 
         public DataTable ObtenerUsuariosM()
         {
@@ -42,8 +41,11 @@ namespace Modelo
         {
             try
             {
+
                 using (SqlConnection connection = ConexionBD.ObtenerConexion())
                 {
+                    connection.Open();
+
                     using (SqlCommand command = new SqlCommand("SELECT * FROM Usuarios WHERE correo = @correo AND contraseña = @contraseña AND rol = 'Administrador'", connection))
                     {
                         command.CommandType = CommandType.Text;
@@ -101,6 +103,7 @@ namespace Modelo
                         command.Parameters.AddWithValue("@rol", usuario.Rol);
                         command.ExecuteNonQuery();
                     }
+                    connection.Close();
                 }
             }
             catch (SqlException ex)

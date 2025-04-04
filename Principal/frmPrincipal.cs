@@ -57,5 +57,10 @@ namespace Principal
         {
             Application.Exit();
         }
+
+        private void frmPrincipal_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
