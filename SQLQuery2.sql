@@ -43,7 +43,7 @@ CREATE TABLE Productos (
     id_producto INT IDENTITY(1,1) PRIMARY KEY,
     id_categoria INT NOT NULL,
     id_proveedor INT NOT NULL,
-    nombre VARCHAR(100) NOT NULL UNIQUE, -- Evita nombres duplicados
+    nombre VARCHAR(100) NOT NULL,
     descripcion TEXT NULL,
     precio_venta DECIMAL(10,2) NOT NULL,
     stock INT NOT NULL CHECK (stock >= 0),
@@ -65,16 +65,27 @@ CREATE TABLE Facturas (
     total DECIMAL(10,2) NOT NULL,
     metodo_pago VARCHAR(50) NOT NULL,
     id_cliente INT NULL,
-    id_proveedor INT NULL,
-	id_empleado INT NULL,
+	id_empleado INT,
 
     FOREIGN KEY (id_cliente) REFERENCES Usuarios(id_usuario),
-    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor),
 	FOREIGN KEY (id_empleado) REFERENCES Usuarios(id_usuario)
 );
 GO
 
 
+
+
+CREATE TABLE Detalles_Facturas(
+	id_detalles  INT IDENTITY(1,1) PRIMARY KEY,
+	id_factura INT NOT NULL,
+	id_producto INT NOT NULL,
+	cantidad INT NOT NULL,
+	precio DECIMAL(10,2),
+
+	FOREIGN KEY (id_factura) REFERENCES Facturas(id_factura),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto),
+
+GO
 -- Insertar Usuarios (Admins y Empleados para manejar productos)
 INSERT INTO Usuarios (correo, nombre, apellido, contraseña, rol) VALUES
 ('admin123@gmail.com', 'Juan', 'Pérez', 'admin123', 'Administrador'),
@@ -218,7 +229,7 @@ GO
 --
 
  CREATE PROCEDURE sp_ActualizarProducto
-    @id_producto INT,  -- Agregar este parámetro
+    @id_producto INT, 
     @nombre NVARCHAR(100),
     @categoria NVARCHAR(100),
     @descripcion NVARCHAR(255),
@@ -264,7 +275,7 @@ BEGIN
         precio_venta = @precio,
         stock = @stock,
         id_proveedor = @id_proveedor
-    WHERE id_producto = @id_producto;  -- Usar ID en lugar de nombre
+    WHERE id_producto = @id_producto; 
 
     PRINT 'Producto actualizado correctamente.';
 END;
@@ -295,5 +306,3 @@ END;
 GO
 
 
-
-SELECT * FROM Usuarios WHERE correo = 'admin123@gmail.com' AND contraseña = 'admin123' AND rol = 'Administrador'
