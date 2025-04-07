@@ -40,6 +40,7 @@ namespace Modelo
             return productos;
         }
 
+
         public void AgregarProductosM(Producto producto)
         {
             using (SqlConnection connection = ConexionBD.ObtenerConexion())

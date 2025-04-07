@@ -10,6 +10,7 @@ namespace Principal
     {
         private ProductoL productoL = new ProductoL();
         private UsuarioL usuarioL = new UsuarioL();
+        private FacturaL facturaL = new FacturaL();
         private bool modoEdicion = false;
         private DataGridViewRow filaEditable = null;
         private DataTable tablaOriginal;
@@ -36,6 +37,8 @@ namespace Principal
             {
                 DataTable datosTabla;
 
+
+
                 if (datos == "productos")
                 {
                     datosTabla = productoL.ObtenerProductosL();
@@ -43,6 +46,10 @@ namespace Principal
                 else if (datos == "usuarios")
                 {
                     datosTabla = usuarioL.ObtenerUsuariosL();
+                }
+                else if (datos == "facturas")
+                {
+                    datosTabla = facturaL.ObtenerFacturaL();
                 }
                 else
                 {
@@ -55,15 +62,17 @@ namespace Principal
 
                 if (datos == "productos")
                 {
-                    dgvDatos.Columns[0].DisplayIndex = 7;
-                    dgvDatos.Columns[1].DisplayIndex = 8;
-                    dgvDatos.Columns[2].DisplayIndex = 0;
-                    dgvDatos.Columns[3].DisplayIndex = 1;
-                    dgvDatos.Columns[4].DisplayIndex = 2;
-                    dgvDatos.Columns[5].DisplayIndex = 3;
-                    dgvDatos.Columns[6].DisplayIndex = 4;
-                    dgvDatos.Columns[7].DisplayIndex = 5;
-                    dgvDatos.Columns[8].DisplayIndex = 6;
+
+                    dgvDatos.Columns["ID"].DisplayIndex = 0;
+                    dgvDatos.Columns["Nombre"].DisplayIndex = 1;
+                    dgvDatos.Columns["Categoria"].DisplayIndex = 2;
+                    dgvDatos.Columns["Descripcion"].DisplayIndex = 3;
+                    dgvDatos.Columns["Precio"].DisplayIndex = 4;
+                    dgvDatos.Columns["Stock"].DisplayIndex = 5;
+                    dgvDatos.Columns["Proveedor"].DisplayIndex = 6;
+                    dgvDatos.Columns["Fecha"].DisplayIndex = 7;
+                    dgvDatos.Columns["btnEditar"].DisplayIndex = 8;
+                    dgvDatos.Columns["btnEliminar"].DisplayIndex = 9;
                 }
                 else if (datos == "usuarios")
                 {
@@ -75,6 +84,18 @@ namespace Principal
                     dgvDatos.Columns["Rol"].DisplayIndex = 5;
                     dgvDatos.Columns["btnEditar"].DisplayIndex = 6;
                     dgvDatos.Columns["btnEliminar"].DisplayIndex = 7;
+                }
+                else if (datos == "facturas")
+                {
+                    dgvDatos.Columns["ID"].DisplayIndex = 0;
+                    dgvDatos.Columns["Tipo"].DisplayIndex = 1;
+                    dgvDatos.Columns["Empleado"].DisplayIndex = 2;
+                    dgvDatos.Columns["Cliente"].DisplayIndex = 3;
+                    dgvDatos.Columns["Proveedor"].DisplayIndex = 4;
+                    dgvDatos.Columns["Fecha"].DisplayIndex = 5;
+                    dgvDatos.Columns["Total"].DisplayIndex = 6;
+                    dgvDatos.Columns["btnEditar"].DisplayIndex = 7;
+                    dgvDatos.Columns["btnEliminar"].DisplayIndex = 8;
                 }
 
                 foreach (DataGridViewColumn col in dgvDatos.Columns)
@@ -93,34 +114,16 @@ namespace Principal
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            try
+            if (datos == "facturas")
             {
-                if (datos == "productos")
-                {
-                    if (modoEdicion)
-                        GuardarDatos();
-                    else
-                        AgregarNuevoDato();
-                }
-                else if (datos == "usuarios")
-                {
-                    if (modoEdicion)
-                        GuardarDatos();
-                    else
-                        AgregarNuevoDato();
-                }
-                else
-                {
-                    MessageBox.Show("Tipo de datos desconocido. Verifique la selección.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-
+                frmFactura frmFactura = new frmFactura();
+                frmFactura.Show();
+                this.Hide();
             }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            if (modoEdicion)
+                GuardarDatos();
+            else
+                AgregarNuevoDato();
         }
 
         private void AgregarNuevoDato()
@@ -216,6 +219,14 @@ namespace Principal
                         Debug.WriteLine(message: "Correo " + correo, "Contra " + contraseña);
                     }
                 }
+                //else if (datos == "facturas")
+                //{
+                //    string correo = currentRow["Correo"]?.ToString() ?? string.Empty;
+                //    string nombre = currentRow["Nombre"]?.ToString() ?? string.Empty;
+                //    string apellido = currentRow["Apellido"]?.ToString() ?? string.Empty;
+                //    string contraseña = currentRow["Contraseña"]?.ToString() ?? string.Empty;
+                //    string rol = currentRow["Rol"]?.ToString() ?? string.Empty;
+                //}
 
                 modoEdicion = false;
                 dgvDatos.ReadOnly = true;
@@ -482,7 +493,8 @@ namespace Principal
 
         private void linkLabelFacturas_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-
+            datos = "facturas";
+            CargarDatos();
         }
 
 
