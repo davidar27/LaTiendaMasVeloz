@@ -33,10 +33,6 @@ namespace Principal
         }
 
 
-        private void btnCliente_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)

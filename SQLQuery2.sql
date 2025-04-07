@@ -60,17 +60,14 @@ CREATE TABLE Facturas (
     id_factura INT IDENTITY(1,1) PRIMARY KEY,
     tipo_factura VARCHAR(10) CHECK (tipo_factura IN ('Venta', 'Compra')) NOT NULL,
     fecha DATETIME DEFAULT GETDATE(),
-    subtotal DECIMAL(10,2) NOT NULL,
-    impuestos DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    metodo_pago VARCHAR(50) NOT NULL,
-    id_cliente INT NULL,
+    id_cliente INT,
 	id_empleado INT,
 
     FOREIGN KEY (id_cliente) REFERENCES Usuarios(id_usuario),
 	FOREIGN KEY (id_empleado) REFERENCES Usuarios(id_usuario)
 );
 GO
+
 
 
 
@@ -83,10 +80,11 @@ CREATE TABLE Detalles_Facturas(
 	precio DECIMAL(10,2),
 
 	FOREIGN KEY (id_factura) REFERENCES Facturas(id_factura),
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+	);
 
-GO
 -- Insertar Usuarios (Admins y Empleados para manejar productos)
+GO
 INSERT INTO Usuarios (correo, nombre, apellido, contraseña, rol) VALUES
 ('admin123@gmail.com', 'Juan', 'Pérez', 'admin123', 'Administrador'),
 ('maria456@gmail.com', 'Maria', 'Gonzalez', 'empleado456', 'Empleado'),
@@ -115,12 +113,30 @@ VALUES
 (2, 2, 'Casco de seguridad', 'Casco de alta resistencia', 120.50, 20),
 (3, 1, 'Guantes deportivos', 'Guantes acolchados para ciclismo', 35.00, 30);
 
+--
+INSERT INTO Facturas (tipo_factura, id_cliente, id_empleado)
+VALUES ('Venta', 1, 2);  -- Asegúrate de que los IDs existan en Usuarios
+--
+INSERT INTO Detalles_Facturas (id_factura, id_producto, cantidad)
+VALUES 
+(18, 3, 2);  -- Producto 3, 2 unidades a $5000
+
+--
+
+INSERT INTO Facturas (tipo_factura, id_cliente, id_empleado)
+VALUES ('Compra', 3, 2);  -- Cliente 3 y empleado 2
+--
+INSERT INTO Detalles_Facturas (id_factura, id_producto, cantidad)
+VALUES 
+(19, 1, 10);
+
 
 
 /*
 -- Desactivar temporalmente las restricciones de claves foráneas
 ALTER TABLE Facturas NOCHECK CONSTRAINT ALL;
 ALTER TABLE Productos NOCHECK CONSTRAINT ALL;
+ALTER TABLE Detalles_Facturas NOCHECK CONSTRAINT ALL;
 
 -- Eliminar los registros de las tablas en orden correcto
 DELETE FROM Facturas;
@@ -128,10 +144,13 @@ DELETE FROM Productos;
 DELETE FROM Proveedores;
 DELETE FROM Categorias;
 DELETE FROM Usuarios;
+DELETE FROM Detalles_Facturas;
+
 
 -- Reactivar las restricciones
 ALTER TABLE Facturas CHECK CONSTRAINT ALL;
 ALTER TABLE Productos CHECK CONSTRAINT ALL;
+ALTER TABLE Detalles_Facturas CHECK CONSTRAINT ALL;
 */
 
 GO
@@ -153,7 +172,18 @@ BEGIN
     INNER JOIN Proveedores pr ON p.id_proveedor = pr.id_proveedor;
 END;
 GO
+--
 
+/*CREATE PROCEDURE sp_ObtenerFacturasVenta
+AS
+BEGIN
+	SELECT
+		f.id_factura AS ID,
+		f.id_empleado AS Empleado,
+		f.id_cliente AS Cliente,
+		f.fecha AS Fecha
+	FROM Facturas f
+	*/
 --
 CREATE PROCEDURE sp_ObtenerUsuarios
 AS
@@ -167,7 +197,7 @@ BEGIN
 		u.rol AS Rol
     FROM Usuarios u
 END;
-GO
+-- GO
 
 
 --
@@ -306,3 +336,58 @@ END;
 GO
 
 
+CREATE PROCEDURE sp_ObtenerFacturas
+AS
+BEGIN
+    SELECT 
+        f.id_factura AS ID,
+        emp.nombre + ' ' + emp.apellido AS Empleado,
+
+        -- Mostrar cliente solo si es una venta
+        CASE 
+            WHEN f.tipo_factura = 'Venta' THEN cli.nombre + ' ' + cli.apellido
+            ELSE NULL
+        END AS Cliente,
+
+        -- Mostrar proveedor solo si es una compra
+        CASE 
+            WHEN f.tipo_factura = 'Compra' THEN prov.nombre
+            ELSE NULL
+        END AS Proveedor,
+
+        f.tipo_factura AS Tipo,
+		f.fecha AS Fecha,
+        SUM(df.cantidad * df.precio) AS Total
+
+    FROM Facturas f
+    JOIN Usuarios emp ON f.id_empleado = emp.id_usuario
+    LEFT JOIN Usuarios cli ON f.id_cliente = cli.id_usuario
+    JOIN Detalles_Facturas df ON f.id_factura = df.id_factura
+    JOIN Productos p ON df.id_producto = p.id_producto
+    LEFT JOIN Proveedores prov ON p.id_proveedor = prov.id_proveedor 
+
+    GROUP BY 
+        f.id_factura, 
+        emp.nombre, emp.apellido, 
+        cli.nombre, cli.apellido, 
+        prov.nombre, 
+		f.fecha,
+        f.tipo_factura;
+END;
+GO
+
+
+
+
+
+CREATE TRIGGER trg_InsertarPrecioAutomatico
+ON Detalles_Facturas
+AFTER INSERT
+AS
+BEGIN
+    UPDATE df
+    SET df.precio = p.precio_venta
+    FROM Detalles_Facturas df
+    JOIN inserted i ON df.id_detalles = i.id_detalles
+    JOIN Productos p ON i.id_producto = p.id_producto;
+END;
