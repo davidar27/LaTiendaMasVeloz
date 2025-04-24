@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Modelo.Entities
 {
-    public class Categoria
+    public class Proveedor
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-
-
+        public string Contacto { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
     }
 }

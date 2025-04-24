@@ -28,46 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnAdmin = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPrincipal));
             btnEmpleado = new Button();
+            btnAdmin = new Button();
             SuspendLayout();
-            // 
-            // btnAdmin
-            // 
-            btnAdmin.Location = new Point(49, 30);
-            btnAdmin.Name = "btnAdmin";
-            btnAdmin.Size = new Size(239, 57);
-            btnAdmin.TabIndex = 0;
-            btnAdmin.Text = "Admin";
-            btnAdmin.UseVisualStyleBackColor = true;
-            btnAdmin.Click += btnAdmin_Click;
             // 
             // btnEmpleado
             // 
-            btnEmpleado.Location = new Point(49, 110);
+            btnEmpleado.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnEmpleado.Image = (Image)resources.GetObject("btnEmpleado.Image");
+            btnEmpleado.ImageAlign = ContentAlignment.TopCenter;
+            btnEmpleado.Location = new Point(419, 47);
+            btnEmpleado.Margin = new Padding(3, 4, 3, 4);
             btnEmpleado.Name = "btnEmpleado";
-            btnEmpleado.Size = new Size(239, 52);
+            btnEmpleado.Size = new Size(277, 309);
             btnEmpleado.TabIndex = 1;
             btnEmpleado.Text = "Empleado";
+            btnEmpleado.TextAlign = ContentAlignment.TopCenter;
             btnEmpleado.UseVisualStyleBackColor = true;
             btnEmpleado.Click += btnEmpleado_Click;
             // 
+            // btnAdmin
+            // 
+            btnAdmin.AutoSize = true;
+            btnAdmin.BackgroundImageLayout = ImageLayout.None;
+            btnAdmin.FlatStyle = FlatStyle.Flat;
+            btnAdmin.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnAdmin.Image = (Image)resources.GetObject("btnAdmin.Image");
+            btnAdmin.ImageAlign = ContentAlignment.TopCenter;
+            btnAdmin.Location = new Point(97, 47);
+            btnAdmin.Margin = new Padding(3, 4, 3, 4);
+            btnAdmin.Name = "btnAdmin";
+            btnAdmin.Size = new Size(277, 309);
+            btnAdmin.TabIndex = 0;
+            btnAdmin.Text = "Admin";
+            btnAdmin.TextAlign = ContentAlignment.BottomCenter;
+            btnAdmin.TextImageRelation = TextImageRelation.TextAboveImage;
+            btnAdmin.UseVisualStyleBackColor = true;
+            btnAdmin.Click += btnAdmin_Click;
+            // 
             // frmPrincipal
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(340, 186);
-            Controls.Add(btnEmpleado);
+            ClientSize = new Size(819, 410);
             Controls.Add(btnAdmin);
+            Controls.Add(btnEmpleado);
+            Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "frmPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "frmPrincipal";
             Load += frmPrincipal_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private Button btnAdmin;
         private Button btnEmpleado;
+        private Button btnAdmin;
     }
 }

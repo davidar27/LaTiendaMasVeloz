@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ReportViewer.WinForms" Version="10.0.40219.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logica\Logica.csproj" />
     <ProjectReference Include="..\Modelo\Modelo.csproj" />
   </ItemGroup>

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLogin));
             labelLogin = new Label();
             txtUsuario = new TextBox();
             txtContraseña = new TextBox();
@@ -64,7 +65,6 @@
             txtContraseña.Name = "txtContraseña";
             txtContraseña.Size = new Size(296, 27);
             txtContraseña.TabIndex = 2;
-            txtContraseña.TextChanged += txbContraseña_TextChanged;
             // 
             // btnEntrar
             // 
@@ -79,8 +79,7 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = Properties.Resources.user_circle_svgrepo_com;
-            pictureBox1.InitialImage = Properties.Resources.user_circle_svgrepo_com;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(122, 72);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(125, 125);
@@ -132,9 +131,9 @@
             Controls.Add(txtUsuario);
             Controls.Add(labelLogin);
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "frmLogin";
             Text = "frmLogin";
-            Load += frmLogin_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

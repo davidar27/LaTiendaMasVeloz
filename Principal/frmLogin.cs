@@ -1,4 +1,5 @@
 ﻿using Logica;
+using Principal;
 
 namespace Principal
 {
@@ -13,43 +14,30 @@ namespace Principal
 
         private void btnEntrar_Click(object sender, EventArgs e)
         {
-
-            if (txtUsuario.Text != "" || txtContraseña.Text != "")
+            if (!string.IsNullOrEmpty(txtUsuario.Text) && !string.IsNullOrEmpty(txtContraseña.Text))
             {
-                var validar = usuarioL.ValidarUsuarioL(txtUsuario.Text, txtContraseña.Text);
-                if (validar)
+                if (usuarioL.ValidarUsuarioL(txtUsuario.Text, txtContraseña.Text))
                 {
+                    GlobalVariables.Rol = "Administrador";
                     frmProductos frm = new frmProductos();
+
+                    
+
                     this.Hide();
                     frm.ShowDialog();
                     this.Show();
                 }
                 else
                 {
-                    lbError.Text = "Usuario o contraseña Incorrecta";
+                    lbError.Text = "Usuario o contraseña incorrecta";
                     lbError.Visible = true;
                 }
-
             }
             else
             {
-                lbError.Text = "Usuario o contraseña faltantes";
+                lbError.Text = "Debe ingresar usuario y contraseña";
                 lbError.Visible = true;
             }
         }
-
-        private void txbContraseña_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void frmLogin_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-
-
     }
 }

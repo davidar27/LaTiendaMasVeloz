@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Modelo.Entities;
 
+
 namespace Modelo
 {
     public class ProductoM
@@ -158,6 +159,49 @@ namespace Modelo
                 }
             }
         }
+
+        public int  AgregarProductoBasicoM(Producto producto)
+        {
+            using (SqlConnection connection = ConexionBD.ObtenerConexion())
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("sp_AgregarProductoBasico", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = producto.Nombre ?? (object)DBNull.Value;
+                        command.Parameters.Add("@precio_venta", SqlDbType.Decimal).Value = producto.Precio;
+                        command.Parameters.Add("@stock", SqlDbType.Int).Value = producto.Stock;
+                        command.Parameters.Add("@id_proveedor", SqlDbType.NVarChar, 100).Value = producto.Proveedor ?? (object)DBNull.Value;
+
+                        object result = command.ExecuteScalar();
+                        return Convert.ToInt32(result);
+
+
+                    }
+                }
+                catch (SqlException ex) when (ex.Number == -2)
+                {
+                    throw new Exception("Timeout al conectar con la base de datos", ex);
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception($"Error SQL ({ex.Number}): {ex.Message}", ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error inesperado: {ex.Message}", ex);
+                }
+            }
+        }
+
+
+
+
+
 
 
     }

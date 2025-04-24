@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,14 @@ namespace Modelo.Entities
         public int Stock { get; set; }
         public string Proveedor { get; set; }
 
-        public string fecha { get; set; }
+        public string Fecha { get; set; }
+
+
+        public override string ToString()
+        {
+            return Nombre;
+        }
     }
+
+
 }
